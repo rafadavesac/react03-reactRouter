@@ -1,0 +1,45 @@
+name: "Validação - Etapa 1: Páginas"
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  validate-etapa1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verificar página Home
+        run: |
+          if [ ! -f "src/pages/Home.jsx" ]; then
+            echo "❌ Arquivo src/pages/Home.jsx não encontrado!"
+            exit 1
+          fi
+          echo "✅ src/pages/Home.jsx encontrado"
+
+      - name: Verificar página Post
+        run: |
+          if [ ! -f "src/pages/Post.jsx" ]; then
+            echo "❌ Arquivo src/pages/Post.jsx não encontrado!"
+            exit 1
+          fi
+          echo "✅ src/pages/Post.jsx encontrado"
+
+      - name: Verificar página About
+        run: |
+          if [ ! -f "src/pages/About.jsx" ]; then
+            echo "❌ Arquivo src/pages/About.jsx não encontrado!"
+            exit 1
+          fi
+          echo "✅ src/pages/About.jsx encontrado"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Build do projeto
+        run: npm run build

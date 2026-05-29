@@ -1,0 +1,53 @@
+name: "Validação - Etapa 2: React Router"
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  validate-etapa2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Verificar react-router-dom no package.json
+        run: |
+          if ! grep -q "react-router-dom" package.json; then
+            echo "❌ react-router-dom não encontrado no package.json!"
+            exit 1
+          fi
+          echo "✅ react-router-dom encontrado no package.json"
+
+      - name: Verificar uso de BrowserRouter
+        run: |
+          if ! grep -r "BrowserRouter" src/; then
+            echo "❌ BrowserRouter não encontrado no código!"
+            exit 1
+          fi
+          echo "✅ BrowserRouter encontrado"
+
+      - name: Verificar uso de Route
+        run: |
+          if ! grep -r "Route" src/ | grep -v "BrowserRouter"; then
+            echo "❌ Route não encontrado no código!"
+            exit 1
+          fi
+          echo "✅ Route encontrado"
+
+      - name: Verificar uso de useParams
+        run: |
+          if ! grep -r "useParams" src/; then
+            echo "❌ useParams não encontrado no código!"
+            exit 1
+          fi
+          echo "✅ useParams encontrado"
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Build do projeto
+        run: npm run build
